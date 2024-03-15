@@ -1,0 +1,28 @@
+<mat-card class="page" ngClass.gt-md="'limit-page-width'">
+  <div class="centered-content">
+    <mat-card-title>Tweets</mat-card-title>
+    <button mat-raised-button class="new-study accent-button" (click)="createTweet()">New Tweet</button>
+    <mat-card class="example-card" *ngFor="let t of tweets">
+      <mat-card-header>
+        <mat-card-title>@{{t.username}}</mat-card-title>
+        <mat-card-subtitle>{{t.tag}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          {{t.text}}
+        </p>
+        <div class="tweet-footer">
+          <div>
+            Date Created
+          </div>
+          <div>
+            <button mat-icon-button><mat-icon>favorite</mat-icon></button>
+            <button mat-icon-button><mat-icon>share</mat-icon></button>
+            <button mat-icon-button (click)="editTweet(t)"><mat-icon>edit</mat-icon></button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</mat-card>

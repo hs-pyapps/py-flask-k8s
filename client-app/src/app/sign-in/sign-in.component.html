@@ -1,0 +1,21 @@
+<!-- Sign-in form -->
+<form *ngIf="!showNewPasswordForm" [formGroup]="signInForm" (ngSubmit)="signIn()">
+  <div>
+    <label for="email">Email:</label>
+    <input formControlName="email" name="email" id="email" type="email" required />
+  </div>
+  <div>
+    <label for="password">Password:</label>
+    <input formControlName="password" name="password" id="password" type="password" required />
+  </div>
+  <button type="submit" [disabled]="signInForm.invalid">Sign In</button>
+</form>
+  
+<!-- New password form -->
+<form *ngIf="showNewPasswordForm" [formGroup]="newPasswordForm" (ngSubmit)="submitNewPassword()">
+  <div class="form-group">
+    <label for="newPassword">New Password</label>
+    <input type="password" class="form-control" id="newPassword" formControlName="newPassword" name="newPassword" required />
+  </div>
+  <button type="submit" [disabled]="newPasswordForm.invalid">Submit New Password</button>
+</form>

@@ -1,0 +1,46 @@
+:host {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.page {
+  flex: 1;
+  margin: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.limit-page-width {
+  min-height: 800px;
+  max-width: 1200px;
+}
+
+.new-study {
+  width: 200px;
+}
+
+.example-card {
+  max-width: 400px;
+}
+
+.example-header-image {
+  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  background-size: cover;
+}
+
+.centered-content {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tweet-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}

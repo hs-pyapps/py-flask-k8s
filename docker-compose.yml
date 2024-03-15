@@ -1,0 +1,53 @@
+version: '3.1'
+
+services:
+  tweets:
+    build:
+      context: ./tweets
+      dockerfile: Dockerfile
+    # image: flaskapp:tweets-1.0
+    image: ${PROJECT_NAME}:tweets-${VERSION}
+    ports:
+      - "8000:8000"
+    restart: always
+    networks:
+      - backend
+  users:
+    build:
+      context: ./users
+      dockerfile: Dockerfile
+    image: ${PROJECT_NAME}:users-${VERSION}
+    ports:
+      - "8001:8000"
+    restart: always
+    networks:
+      - backend
+  search:
+    build:
+      context: ./search
+      dockerfile: Dockerfile
+    image: ${PROJECT_NAME}:search-${VERSION}
+    ports:
+      - "8002:8000"
+    restart: always
+    networks:
+      - backend
+  db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    image: database:1.0
+    ports:
+      - "8004:3306"
+    restart: always
+    networks:
+      - backend
+    volumes:
+      - db:/var/lib/mysql
+
+volumes:
+  db:
+
+networks:
+  # The presence of these objects is sufficient to define them
+  backend: {}

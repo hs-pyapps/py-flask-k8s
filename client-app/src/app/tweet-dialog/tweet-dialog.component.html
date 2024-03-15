@@ -1,0 +1,29 @@
+<h1 mat-dialog-title>{{purpose}} Tweet</h1>
+<div mat-dialog-content>
+  <div class="rows">
+    <form class="params" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="fill">
+        <mat-label for="tweet_text">Tweet</mat-label>
+        <textarea matInput id="tweet_text" matInput formControlName="tweetText"></textarea>
+      </mat-form-field>
+      
+      <mat-form-field appearance="fill">
+        <mat-label for="tweet_tag">Tag</mat-label>
+        <mat-select formControlName="tweetTag" id="tweet_tag" [(value)]="selectedTag">
+          <mat-option *ngFor="let tag of tagOptions" [value]="tag.id">
+            {{tag.name}}
+          </mat-option>
+        </mat-select> 
+      </mat-form-field>
+      
+      <div>
+        <mat-slide-toggle formControlName="tweetPrivacy">Private</mat-slide-toggle>
+      </div>
+    </form>
+  </div>
+
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button (click)="onSubmit()" cdkFocusInitial color="primary" [disabled]="!formGroup.valid">{{purpose}}</button>
+</div>

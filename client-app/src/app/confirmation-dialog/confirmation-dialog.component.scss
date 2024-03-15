@@ -1,0 +1,31 @@
+.rows {
+  display: flex;
+  gap: 20px;
+}
+
+.params {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 20px;
+}
+
+.img-parent {
+  position: relative;
+}
+
+.img-preview {
+  max-width: 50vw;
+  position: relative;
+}
+
+.img-overlay {
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.region {
+}

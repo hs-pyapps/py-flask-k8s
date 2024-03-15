@@ -1,0 +1,138 @@
+<mat-form-field appearance="standard">
+  <mat-label>Filter</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+</mat-form-field>
+
+<!--<div class="mat-elevation-z8">-->
+<table mat-table
+       [dataSource]="dataSource" multiTemplateDataRows
+       class="mat-elevation-z8" matSort
+       matSortActive="createdDate" matSortDirection="desc">
+
+  <ng-container matColumnDef="createdDate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+    <td mat-cell *matCellDef="let row"> {{row.createdDate | dateFormat}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="createdBy">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Created By </th>
+    <td mat-cell *matCellDef="let row"> {{row.createdBy || 'Unknown'}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="studyName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Study Name </th>
+    <td mat-cell *matCellDef="let row"> {{row.studyName}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="compkey">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> CompKey </th>
+    <td mat-cell *matCellDef="let row"> {{row.compkey}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+    <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="totalVehicles">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Vehicles </th>
+    <td mat-cell *matCellDef="let row"> {{row.totalVehicles}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Actions </th>
+    <td mat-cell *matCellDef="let row" (click)="$event.stopPropagation()">
+      <button mat-icon-button class="example-icon" (click)="onRowAction(row, 'download')" title="Download Results">
+        <mat-icon>download</mat-icon>
+      </button>
+      <button mat-icon-button class="example-icon" (click)="onRowAction(row, 'copy')" title="Clone this to new Study">
+        <mat-icon>file_copy</mat-icon>
+      </button>
+      <button [disabled]="row.finalState" mat-icon-button class="example-icon" (click)="onRowAction(row, 'cancel')" title="Cancel Study">
+        <mat-icon>cancel</mat-icon>
+      </button>
+      <button [disabled]="!row.finalState" mat-icon-button class="example-icon" (click)="onRowAction(row, 'delete')" title="Delete Study">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+  <ng-container matColumnDef="expandedDetail">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+      <div class="example-element-detail"
+           [@detailExpand]="element === expandedElement ? 'expanded' : 'collapsed'"
+           fxLayout="row"
+           fxLayout.lt-md="column">
+        <div class="expand-chunk" ngClass.lt-sm="expand-chunk-small">
+          <h5>Original Request: </h5>
+          <div>{{element.request}}</div>
+        </div>
+        <div class="expand-chunk" [style.display]="'flex'" ngClass.lt-sm="expand-chunk-small">
+          <div [style.flex]="1">
+            <h5>Diagnostics: </h5>
+            <h4>Status: {{element.error}}</h4>
+            <div>
+              <div>
+                <div>Requested Duration: {{element.originalRequestObj?.jobDuration}}hr</div>
+                <div>Time Offset: {{timestamp}}s</div>
+                <div>Samples Length: {{element.elapsedSeconds}}s</div>
+              </div> <!--<input type="text" [(ngModel)]="timestamp" (keydown.enter)="onRowAction(element, 'diagnostics')" />-->
+              <mat-slider class="slider" min="0" [max]="element.elapsedSeconds - minCutoff" step="1" [(ngModel)]="timestamp" (change)="timestamp = ''+$event.value;onRowAction(element, 'diagnostics')"></mat-slider>
+              <button mat-icon-button class="example-icon" (click)="onRowAction(element, 'diagnostics')" title="Fetch History">
+                <mat-icon>history</mat-icon>
+              </button>
+            </div>
+            <div *ngIf="!element.diagnostics">{{"Press fetch history."}}</div>
+            <div *ngIf="element.diagnostics">
+              <div [style.height]="'auto'">
+                <carousel [images]="element.diagnosticsImages"
+                          [cellsToShow]="1"
+                          [height]="200"
+                          [width]="354"
+                          [loop]="true"
+                          [autoplay]="true"
+                          [autoplayInterval]="750"
+                          [pauseOnHover]="true"
+                          [arrowsOutside]="false"
+                          [transitionDuration]="1">
+                </carousel>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+      class="example-element-row"
+      [class.example-expanded-row]="expandedElement === element"
+      (click)="setExpandedElement(expandedElement === element ? null : element)">
+  </tr>
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+  <!-- Row shown when there is no matching data. -->
+  <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell" [attr.colspan]="displayedColumns.length" *ngIf="pendingData"><mat-spinner></mat-spinner></td>
+    <td class="mat-cell centered-row" [attr.colspan]="displayedColumns.length" *ngIf="!pendingData">No data matching data found.</td>
+  </tr>
+</table>
+
+
+    <!--
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+        class="example-element-row"
+        [class.example-expanded-row]="expandedElement === element"
+        (click)="expandedElement = expandedElement === element ? null : element">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>-->
+    <!-- Row shown when there is no matching data. -->
+    <!--<tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+    </tr>
+  </table>-->
+    <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>-->
+<!--</div>-->
